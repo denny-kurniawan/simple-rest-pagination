@@ -65,7 +65,11 @@ const Paging = ({
     <Container className='d-flex flex-wrap justify-content-around'>
       <Form.Group>
         <Form.Label>Per Page</Form.Label>
-        <Form.Select size='sm' defaultValue={perPage} onChange={clickPerPage}>
+        <Form.Select
+          size='sm'
+          defaultValue={pageSize[1]}
+          onChange={clickPerPage}
+        >
           {pageSizes}
         </Form.Select>
       </Form.Group>
