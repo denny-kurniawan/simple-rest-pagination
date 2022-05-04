@@ -39,7 +39,6 @@ function App() {
         setLoading(false)
         setError(true)
         setUsers(null)
-        console.log(error)
       } finally {
         setLoading(false)
         setError(false)
@@ -48,17 +47,6 @@ function App() {
 
     getData(activePage, pageSize) // eslint-disable-next-line
   }, [activePage, pageSize])
-
-  // const fetchData = async (page = 1, per = 5) => {
-  //   setLoading(true)
-  //   const res = await fetch(
-  //     `https://reqres.in/api/users?per_page=${per}&page=${page}&delay=1`
-  //   )
-  //   const data = await res.json()
-  //   setLoading(false)
-
-  //   return data
-  // }
 
   return (
     <Container>
@@ -77,8 +65,6 @@ function App() {
           {loading && (
             <tr>
               <td colSpan={5}>
-                {/* <ReactLoading type='spin' color='black' /> */}
-                {/* Loading */}
                 <Skeleton className='my-2' />
               </td>
             </tr>
@@ -105,29 +91,6 @@ function App() {
                 </td>
               </tr>
             ))}
-          {/* {users.length === 0 ? (
-            <tr>
-              <td colSpan={5}>No entries found</td>
-            </tr>
-          ) : users.length > 0 && loading === false ? (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.email}</td>
-                <td>{user.first_name}</td>
-                <td>{user.last_name}</td>
-                <td>
-                  <Image src={user.avatar} width={50} height={50} />
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5}>
-                <Skeleton className='my-2' />
-              </td>
-            </tr>
-          )} */}
         </tbody>
       </Table>
 
