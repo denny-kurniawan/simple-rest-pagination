@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
-import Pagination from 'react-bootstrap/Pagination'
-import Form from 'react-bootstrap/Form'
+// import Pagination from 'react-bootstrap/Pagination'
+// import Form from 'react-bootstrap/Form'
 // import ReactLoading from 'react-loading'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import Paging from './components/Paging'
 
 function App() {
   const [users, setUsers] = useState([])
@@ -36,51 +37,51 @@ function App() {
     return data
   }
 
-  const firstPage = () => {
-    if (activePage > 1) {
-      setActivePage(1)
-    }
-  }
+  // const firstPage = () => {
+  //   if (activePage > 1) {
+  //     setActivePage(1)
+  //   }
+  // }
 
-  const lastPage = () => {
-    if (activePage !== totalPage) {
-      setActivePage(totalPage)
-    }
-  }
+  // const lastPage = () => {
+  //   if (activePage !== totalPage) {
+  //     setActivePage(totalPage)
+  //   }
+  // }
 
-  const prevPage = () => {
-    if (activePage > 1) {
-      setActivePage(activePage - 1)
-    }
-  }
+  // const prevPage = () => {
+  //   if (activePage > 1) {
+  //     setActivePage(activePage - 1)
+  //   }
+  // }
 
-  const nextPage = () => {
-    if (activePage !== totalPage) {
-      setActivePage(activePage + 1)
-    }
-  }
+  // const nextPage = () => {
+  //   if (activePage !== totalPage) {
+  //     setActivePage(activePage + 1)
+  //   }
+  // }
 
-  const clickPage = (page) => {
-    setActivePage(page)
-  }
+  // const clickPage = (page) => {
+  //   setActivePage(page)
+  // }
 
-  const clickPerPage = (e) => {
-    setActivePage(1)
-    setPerPage(e.target.value)
-  }
+  // const clickPerPage = (e) => {
+  //   setActivePage(1)
+  //   setPerPage(e.target.value)
+  // }
 
-  let items = []
-  for (let i = 1; i <= totalPage; i++) {
-    items.push(
-      <Pagination.Item
-        onClick={() => clickPage(i)}
-        key={i}
-        active={i === activePage}
-      >
-        {i}
-      </Pagination.Item>
-    )
-  }
+  // let items = []
+  // for (let i = 1; i <= totalPage; i++) {
+  //   items.push(
+  //     <Pagination.Item
+  //       onClick={() => clickPage(i)}
+  //       key={i}
+  //       active={i === activePage}
+  //     >
+  //       {i}
+  //     </Pagination.Item>
+  //   )
+  // }
 
   return (
     <Container>
@@ -96,7 +97,11 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {users.length > 0 && loading === false ? (
+          {users.length === 0 ? (
+            <tr>
+              <td colSpan={5}>No entries found</td>
+            </tr>
+          ) : users.length > 0 && loading === false ? (
             users.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
@@ -120,10 +125,18 @@ function App() {
         </tbody>
       </Table>
 
-      <Container className='d-flex flex-wrap justify-content-around'>
+      <Paging
+        activePage={activePage}
+        setActivePage={setActivePage}
+        totalPage={totalPage}
+        perPage={perPage}
+        setPerPage={setPerPage}
+      />
+
+      {/* <Container className='d-flex flex-wrap justify-content-around'>
         <Form.Group>
           <Form.Label>Per Page</Form.Label>
-          <Form.Select size='sm' defaultValue={5} onChange={clickPerPage}>
+          <Form.Select size='sm' defaultValue={perPage} onChange={clickPerPage}>
             <option value='2'>2</option>
             <option value='3'>3</option>
             <option value='4'>4</option>
@@ -156,7 +169,7 @@ function App() {
             </>
           )}
         </Pagination>
-      </Container>
+      </Container> */}
     </Container>
   )
 }
