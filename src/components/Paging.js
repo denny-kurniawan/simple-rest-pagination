@@ -6,9 +6,8 @@ const Paging = ({
   activePage,
   setActivePage,
   totalPage,
-  perPage,
-  setPerPage,
-  pageSize,
+  setPageSize,
+  pageSizeArr,
 }) => {
   const firstPage = () => {
     if (activePage > 1) {
@@ -40,7 +39,7 @@ const Paging = ({
 
   const clickPerPage = (e) => {
     setActivePage(1)
-    setPerPage(e.target.value)
+    setPageSize(e.target.value)
   }
 
   let items = []
@@ -57,8 +56,12 @@ const Paging = ({
   }
 
   let pageSizes = []
-  for (let i = 0; i < pageSize.length; i++) {
-    pageSizes.push(<option value={pageSize[i]}>{pageSize[i]}</option>)
+  for (let i = 0; i < pageSizeArr.length; i++) {
+    pageSizes.push(
+      <option key={i} value={pageSizeArr[i]}>
+        {pageSizeArr[i]}
+      </option>
+    )
   }
 
   return (
@@ -67,7 +70,7 @@ const Paging = ({
         <Form.Label>Per Page</Form.Label>
         <Form.Select
           size='sm'
-          defaultValue={pageSize[1]}
+          defaultValue={pageSizeArr[0]}
           onChange={clickPerPage}
         >
           {pageSizes}

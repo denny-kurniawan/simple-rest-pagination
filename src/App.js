@@ -10,77 +10,54 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import Paging from './components/Paging'
 
 function App() {
-  const [users, setUsers] = useState([])
+  const pageSizeArr = [2, 3, 4, 5, 6]
+  const [users, setUsers] = useState(null)
   const [activePage, setActivePage] = useState(1)
   const [totalPage, setTotalPage] = useState(0)
-  const [perPage, setPerPage] = useState(5)
-  const [loading, setLoading] = useState(false)
+  const [pageSize, setPageSize] = useState(pageSizeArr[0])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await fetchData(activePage, perPage)
-      setTotalPage(res.total_pages)
-      setUsers(res.data)
+    const getData = async (page = 1, size) => {
+      try {
+        setUsers(null)
+        setLoading(true)
+        const res = await fetch(
+          `https://reqres.in/api/users?per_page=${size}&page=${page}&delay=1`
+        )
+
+        if (!res.ok) {
+          throw new Error(`This is an HTTP error: The status is ${res.status}`)
+        }
+
+        const data = await res.json()
+
+        setUsers(data.data)
+        setTotalPage(data.total_pages)
+      } catch (err) {
+        setLoading(false)
+        setError(true)
+        setUsers(null)
+        console.log(error)
+      } finally {
+        setLoading(false)
+        setError(false)
+      }
     }
 
-    getData()
-  }, [activePage, perPage])
+    getData(activePage, pageSize) // eslint-disable-next-line
+  }, [activePage, pageSize])
 
-  const fetchData = async (page = 1, per = 5) => {
-    setLoading(true)
-    const res = await fetch(
-      `https://reqres.in/api/users?per_page=${per}&page=${page}&delay=1`
-    )
-    const data = await res.json()
-    setLoading(false)
-
-    return data
-  }
-
-  // const firstPage = () => {
-  //   if (activePage > 1) {
-  //     setActivePage(1)
-  //   }
-  // }
-
-  // const lastPage = () => {
-  //   if (activePage !== totalPage) {
-  //     setActivePage(totalPage)
-  //   }
-  // }
-
-  // const prevPage = () => {
-  //   if (activePage > 1) {
-  //     setActivePage(activePage - 1)
-  //   }
-  // }
-
-  // const nextPage = () => {
-  //   if (activePage !== totalPage) {
-  //     setActivePage(activePage + 1)
-  //   }
-  // }
-
-  // const clickPage = (page) => {
-  //   setActivePage(page)
-  // }
-
-  // const clickPerPage = (e) => {
-  //   setActivePage(1)
-  //   setPerPage(e.target.value)
-  // }
-
-  // let items = []
-  // for (let i = 1; i <= totalPage; i++) {
-  //   items.push(
-  //     <Pagination.Item
-  //       onClick={() => clickPage(i)}
-  //       key={i}
-  //       active={i === activePage}
-  //     >
-  //       {i}
-  //     </Pagination.Item>
+  // const fetchData = async (page = 1, per = 5) => {
+  //   setLoading(true)
+  //   const res = await fetch(
+  //     `https://reqres.in/api/users?per_page=${per}&page=${page}&delay=1`
   //   )
+  //   const data = await res.json()
+  //   setLoading(false)
+
+  //   return data
   // }
 
   return (
@@ -97,7 +74,38 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {users.length === 0 ? (
+          {loading && (
+            <tr>
+              <td colSpan={5}>
+                {/* <ReactLoading type='spin' color='black' /> */}
+                {/* Loading */}
+                <Skeleton className='my-2' />
+              </td>
+            </tr>
+          )}
+          {error && (
+            <tr>
+              <td colSpan={5}>There is an error</td>
+            </tr>
+          )}
+          {!users && !loading && (
+            <tr>
+              <td colSpan={5}>No entries found</td>
+            </tr>
+          )}
+          {users &&
+            users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.email}</td>
+                <td>{user.first_name}</td>
+                <td>{user.last_name}</td>
+                <td>
+                  <Image src={user.avatar} width={50} height={50} />
+                </td>
+              </tr>
+            ))}
+          {/* {users.length === 0 ? (
             <tr>
               <td colSpan={5}>No entries found</td>
             </tr>
@@ -116,12 +124,10 @@ function App() {
           ) : (
             <tr>
               <td colSpan={5}>
-                {/* <ReactLoading type='spin' color='black' /> */}
-                {/* Loading */}
                 <Skeleton className='my-2' />
               </td>
             </tr>
-          )}
+          )} */}
         </tbody>
       </Table>
 
@@ -129,48 +135,9 @@ function App() {
         activePage={activePage}
         setActivePage={setActivePage}
         totalPage={totalPage}
-        perPage={perPage}
-        setPerPage={setPerPage}
-        pageSize={[2, 3, 4, 5, 6]}
+        setPageSize={setPageSize}
+        pageSizeArr={pageSizeArr}
       />
-
-      {/* <Container className='d-flex flex-wrap justify-content-around'>
-        <Form.Group>
-          <Form.Label>Per Page</Form.Label>
-          <Form.Select size='sm' defaultValue={perPage} onChange={clickPerPage}>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4'>4</option>
-            <option value='5'>5</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Pagination className='w-50 justify-content-center'>
-          {activePage === 1 ? (
-            <>
-              <Pagination.First onClick={firstPage} disabled />
-              <Pagination.Prev onClick={prevPage} disabled />
-            </>
-          ) : (
-            <>
-              <Pagination.First onClick={firstPage} />
-              <Pagination.Prev onClick={prevPage} />
-            </>
-          )}
-          {items}
-          {activePage === totalPage ? (
-            <>
-              <Pagination.Next onClick={nextPage} disabled />
-              <Pagination.Last onClick={lastPage} disabled />
-            </>
-          ) : (
-            <>
-              <Pagination.Next onClick={nextPage} />
-              <Pagination.Last onClick={lastPage} />
-            </>
-          )}
-        </Pagination>
-      </Container> */}
     </Container>
   )
 }
