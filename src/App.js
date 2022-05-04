@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const getData = async (page = 1, size) => {
       try {
-        setUsers(null)
+        // setUsers(null)
         setLoading(true)
         const res = await fetch(
           `https://reqres.in/api/users?per_page=${size}&page=${page}&delay=1`
@@ -36,7 +36,6 @@ function App() {
         setUsers(data.data)
         setTotalPage(data.total_pages)
       } catch (err) {
-        setLoading(false)
         setError(true)
         setUsers(null)
       } finally {
@@ -62,13 +61,6 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan={5}>
-                <Skeleton className='my-2' />
-              </td>
-            </tr>
-          )}
           {error && (
             <tr>
               <td colSpan={5}>There is an error</td>
@@ -91,6 +83,13 @@ function App() {
                 </td>
               </tr>
             ))}
+          {loading && (
+            <tr>
+              <td colSpan={5}>
+                <Skeleton className='my-2' />
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
 
