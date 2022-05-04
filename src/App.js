@@ -131,6 +131,7 @@ function App() {
         totalPage={totalPage}
         perPage={perPage}
         setPerPage={setPerPage}
+        pageSize={[2, 3, 4, 5, 6]}
       />
 
       {/* <Container className='d-flex flex-wrap justify-content-around'>

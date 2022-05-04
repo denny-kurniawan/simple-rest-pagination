@@ -8,6 +8,7 @@ const Paging = ({
   totalPage,
   perPage,
   setPerPage,
+  pageSize,
 }) => {
   const firstPage = () => {
     if (activePage > 1) {
@@ -55,15 +56,17 @@ const Paging = ({
     )
   }
 
+  let pageSizes = []
+  for (let i = 0; i < pageSize.length; i++) {
+    pageSizes.push(<option value={pageSize[i]}>{pageSize[i]}</option>)
+  }
+
   return (
     <Container className='d-flex flex-wrap justify-content-around'>
       <Form.Group>
         <Form.Label>Per Page</Form.Label>
         <Form.Select size='sm' defaultValue={perPage} onChange={clickPerPage}>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-          <option value='4'>4</option>
-          <option value='5'>5</option>
+          {pageSizes}
         </Form.Select>
       </Form.Group>
 
