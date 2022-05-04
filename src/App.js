@@ -73,7 +73,7 @@ function App() {
   return (
     <Container>
       <h1>Users</h1>
-      <Table bordered hover size=''>
+      <Table bordered hover>
         <thead>
           <tr>
             <th>ID</th>
